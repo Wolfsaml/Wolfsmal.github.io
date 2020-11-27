@@ -15,18 +15,17 @@
 <meta property="og:site_name" content="smallwolf">
 <meta property="og:description" content="文件上传漏洞总结前言：文件上传漏洞刚上手并不难以理解，可他的知识点比较杂乱，往往需要花费较长的时间去搜索资料并理解，笔者也是浏览了不少他人的文章有所感触，所以打算综合一下形成文档，以期对文件上传漏洞能有个系统性的认识并且便于回顾">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://img-blog.csdn.net/20180623105120258?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0ZseV9ocHM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
 <meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wolfsaml/image-host/blog-img20201128011836.png">
-<meta property="og:image" content="https://img-blog.csdn.net/20180623104854545?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0ZseV9ocHM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:image" content="https://img-blog.csdn.net/20180623104911949?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0ZseV9ocHM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:image" content="https://img-blog.csdn.net/20180623104947655?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0ZseV9ocHM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
-<meta property="og:image" content="https://img-blog.csdn.net/20180623105105459?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0ZseV9ocHM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wolfsaml/image-host/blog-img20201128012347.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wolfsaml/image-host/blog-img20201128012452.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wolfsaml/image-host/blog-img20201128012517.png">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wolfsaml/image-host/blog-img20201128012729.png">
 <meta property="article:published_time" content="2020-11-27T15:37:03.000Z">
-<meta property="article:modified_time" content="2020-11-27T17:19:59.053Z">
+<meta property="article:modified_time" content="2020-11-27T17:27:44.933Z">
 <meta property="article:author" content="Tang zhen">
 <meta property="article:tag" content="文件上传漏洞">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://img-blog.csdn.net/20180623105120258?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0ZseV9ocHM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Wolfsaml/image-host/blog-img20201128011836.png">
   
     <link rel="alternative" href="/atom.xml" title="smallwolf" type="application/atom+xml">
   
@@ -386,7 +385,6 @@
 <li><p><strong>多个Content-Disposition绕过</strong></p>
 <p><strong>原理</strong></p>
 <p>在IIS的环境下，上传文件时如果存在多个Content-Disposition的话，IIS会取第一个Content-Disposition中的值作为接收参数，而如果waf只是取最后一个的话便会被绕过</p>
-<p><img src="https://img-blog.csdn.net/20180623105120258?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0ZseV9ocHM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
 <p><img src="https://cdn.jsdelivr.net/gh/Wolfsaml/image-host/blog-img20201128011836.png" alt="img"></p>
 </li>
 <li><p><strong>利用大小上限绕过</strong></p>
@@ -395,14 +393,14 @@
 </li>
 <li><p><strong>针对fliename绕过</strong></p>
 <p>尝试多加一个filenam或者将filename换位置</p>
-<p><img src="https://img-blog.csdn.net/20180623104854545?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0ZseV9ocHM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Wolfsaml/image-host/blog-img20201128012347.png"></p>
 </li>
 </ol>
-<p><img src="https://img-blog.csdn.net/20180623104911949?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0ZseV9ocHM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Wolfsaml/image-host/blog-img20201128012452.png"></p>
 <ol start="5">
 <li><p><strong>删除实体里面的Conten-Type字段</strong></p>
 <p>第一种是删除Content整行，第二种是删除C后面的字符。删除掉ontent-Type: image/jpeg只留下c，将.php加c后面即可，但是要注意，双引号要跟着c.php</p>
-<p><img src="https://img-blog.csdn.net/20180623104947655?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0ZseV9ocHM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Wolfsaml/image-host/blog-img20201128012517.png"></p>
 </li>
 <li><h5 id="特殊的长文件名绕过"><a href="#特殊的长文件名绕过" class="headerlink" title="特殊的长文件名绕过"></a>特殊的长文件名绕过</h5><p>文件名使用非字母数字，比如中文等最大程度的拉长，不行的话再结合一下其他的特性进行测试：<br>shell.asp;王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王王.jpg</p>
 </li>
@@ -413,7 +411,7 @@
 <p>每次文件上传时的Boundary边界都是一致的，但如果容器在处理的过程中并没有严格要求一致的话可能会导致一个问题，两段Boundary不一致使得waf认为这段数据是无意义的。</p>
 </li>
 <li><p><strong>文件名处回车</strong></p>
-<p><img src="https://img-blog.csdn.net/20180623105105459?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0ZseV9ocHM=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70" alt="img"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/Wolfsaml/image-host/blog-img20201128012729.png"></p>
 </li>
 </ol>
 <h2 id="文件上传漏洞防御思路："><a href="#文件上传漏洞防御思路：" class="headerlink" title="文件上传漏洞防御思路："></a>文件上传漏洞防御思路：</h2><blockquote>
