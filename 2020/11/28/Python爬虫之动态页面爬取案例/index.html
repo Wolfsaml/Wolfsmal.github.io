@@ -6,17 +6,26 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Tag: 随笔 | smallwolf</title>
+  <title>Python爬虫之动态页面爬取案例 | smallwolf</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="个人技术博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="smallwolf">
-<meta property="og:url" content="http://example.com/tags/%E9%9A%8F%E7%AC%94/index.html">
+  <meta name="description" content="前言：在周末抽空看了一天的爬虫教程，对于静态的网站能利用正则表达等进行简单的爬取，这次主要把重心放到爬取动态页面上，同时对于文件的处理也略有思考，所以在此记录一下">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python爬虫之动态页面爬取案例">
+<meta property="og:url" content="http://example.com/2020/11/28/Python%E7%88%AC%E8%99%AB%E4%B9%8B%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2%E7%88%AC%E5%8F%96%E6%A1%88%E4%BE%8B/index.html">
 <meta property="og:site_name" content="smallwolf">
-<meta property="og:description" content="个人技术博客">
+<meta property="og:description" content="前言：在周末抽空看了一天的爬虫教程，对于静态的网站能利用正则表达等进行简单的爬取，这次主要把重心放到爬取动态页面上，同时对于文件的处理也略有思考，所以在此记录一下">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wolfsaml/cdn@1.1/1.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wolfsaml/cdn@1.1/2.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wolfsaml/cdn@1.1/3.jpg">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/Wolfsaml/cdn@1.1/4.jpg">
+<meta property="article:published_time" content="2020-11-28T14:45:40.000Z">
+<meta property="article:modified_time" content="2020-11-28T15:17:09.263Z">
 <meta property="article:author" content="Tang zhen">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="爬虫">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/Wolfsaml/cdn@1.1/1.jpg">
   
     <link rel="alternative" href="/atom.xml" title="smallwolf" type="application/atom+xml">
   
@@ -149,60 +158,256 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-Python爬虫之动态页面爬取案例" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2020" class="archive-year">2020</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2020/10/30/Hello-world/" class="archive-article-date">
-  	<time datetime="2020-10-29T17:56:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-10-30</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2020/10/30/Hello-world/">Hello world</a>
+    <h1 class="article-title" itemprop="name">
+      Python爬虫之动态页面爬取案例
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2020/11/28/Python%E7%88%AC%E8%99%AB%E4%B9%8B%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2%E7%88%AC%E5%8F%96%E6%A1%88%E4%BE%8B/" class="archive-article-date">
+  	<time datetime="2020-11-28T14:45:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-28</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h2><p>在周末抽空看了一天的爬虫教程，对于静态的网站能利用正则表达等进行简单的爬取，这次主要把重心放到爬取动态页面上，同时对于文件的处理也略有思考，所以在此记录一下</p>
+<a id="more"></a>
+
+<h2 id="题目："><a href="#题目：" class="headerlink" title="题目："></a>题目：</h2><p>爬取<a target="_blank" rel="noopener" href="http://www.sse.com.cn/market/stockdata/overview/day/%CC%B6">上交所每日股票情况</a>的数据，将表格中的原始数据进行处理如图，方便转成DataFrame使用</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Wolfsaml/cdn@1.1/1.jpg"></p>
+<h2 id="背景知识补充："><a href="#背景知识补充：" class="headerlink" title="背景知识补充："></a>背景知识补充：</h2><p><strong>JSON</strong></p>
+<p><strong>概述</strong></p>
+<p>JSON是一种取代XML的数据结构,和xml相比,它更小巧但描述能力却不差,由于它的小巧所以网络传输数据将减少更多流量从而加快速度。</p>
+<p><strong>语法规范</strong></p>
+<p>JSON 的语法规则十分简单，可称得上“优雅完美”，总结起来有：<br>数组（Array）用方括号(“[]”)表示。<br>对象（Object）用大括号（”{}”）表示。<br>名称/值对（name/value）组合成数组和对象。<br>名称（name）置于双引号中，值（value）有字符串、数值、布尔值、null、对象和数组。<br>并列的数据之间用逗号（“,”）分隔</p>
+<p><strong>实例</strong></p>
+<p>JSON 数据的书写格式是：名称/值对。</p>
+<p>名称/值对组合中的名称写在前面（在双引号中），值对写在后面，中间用冒号隔开，</p>
+<p>其中 值 可以是：数字（整数或浮点数）、字符串（在双引号中）、布尔值（true或false）、数组（在方括号中）、对象（在花括号中）、null</p>
+<p><em>varjson= {“password”:123456,”name”:”myname”,”Booleans”:true,”Array”:[x,y,z],”object”:{}}</em></p>
+<p>或者是嵌套使用</p>
+<p><strong>与python字典的互相转换</strong></p>
+<ol>
+<li><p>用到的库</p>
+<p>json</p>
+</li>
+<li><p>用到的方法</p>
+<p>dumps()：将字典转换为JSON格式的字符串</p>
+<p>loads()：将JSON格式的字符串转化为字典</p>
+<p>dump()：将字典转换为JSON格式的字符串，并将转化后的结果写入文件</p>
+<p>load()：从文件读取JSON格式的字符串，并将其转化为字典</p>
+</li>
+<li><p>实例</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="comment">#json 转python字典</span></span><br><span class="line">j=<span class="string">&#x27;&#123;&quot;city&quot;:&quot;北京&quot;,&quot;ss&quot;:&quot;天京&quot;&#125;&#x27;</span></span><br><span class="line">p=json.loads(j)</span><br><span class="line">print(<span class="built_in">type</span>(p))</span><br><span class="line"><span class="comment">#字典转json</span></span><br><span class="line">d=&#123;<span class="string">&quot;city&quot;</span>:<span class="string">&quot;北京&quot;</span>,<span class="string">&quot;ss&quot;</span>:<span class="string">&quot;天京&quot;</span>&#125;</span><br><span class="line">ss=json.dumps(d,ensure_ascii=<span class="literal">False</span>) <span class="comment">#不转成Ascii码</span></span><br><span class="line">print(ss)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ol>
+<h2 id="思路："><a href="#思路：" class="headerlink" title="思路："></a>思路：</h2><p>首先观察我们需要的数据位置，发现并不在起初的静态页面上</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Wolfsaml/cdn@1.1/2.jpg" alt="image-20201128212117296"></p>
+<p>经过一番查找，咱们总算是找到数据存在的位置</p>
+<p><img src="https://cdn.jsdelivr.net/gh/Wolfsaml/cdn@1.1/3.jpg" alt="image-20201128214416173"></p>
+<p>好，那么接下来我们观察数据的格式，发现比咱们期望得到的json格式多了个jsoncallback，这里考虑用strip()函数去除不符合json格式的字符，这样剩下来的就是json格式的文件，便于我们转换成python字典</p>
+<h2 id="代码编写："><a href="#代码编写：" class="headerlink" title="代码编写："></a>代码编写：</h2><h3 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h3><p>在编写代码之前加一串声明头，是一个不错的好习惯</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- codeing = utf-8 -*-</span></span><br><span class="line"><span class="comment"># @Time : 2020/11/27 20:18</span></span><br><span class="line"><span class="comment"># @Author : smallwolf</span></span><br><span class="line"><span class="comment"># @File : stockcrawler.py</span></span><br><span class="line"><span class="comment"># @Software: PyCharm</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="导入"><a href="#导入" class="headerlink" title="导入"></a>导入</h3><p>本次编码由于不需要保存和正则查找，所以只需要导入json以及requests就行</p>
+<h3 id="主函数编写"><a href="#主函数编写" class="headerlink" title="主函数编写"></a>主函数编写</h3><p><strong>思路</strong></p>
+<p>先爬取网页的数据，也就是咱们把上面找到需要的网站数据给爬下来</p>
+<p>接着将爬取下来的数据保存在一个新的字典中</p>
+<p>最后print出来检测一下</p>
+<p><strong>代码</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    url = <span class="string">&quot;http://query.sse.com.cn/commonQuery.do?jsonCallBack=jsonpCallback68898&amp;searchDate=&amp;sqlId=COMMON_SSE_SJ_GPSJ_CJGK_DAYCJGK_C&amp;stockType=90&amp;_=1606219120118&quot;</span></span><br><span class="line">    datadict = processdata(url)</span><br><span class="line">    print(datadict)</span><br></pre></td></tr></table></figure>
+
+<h3 id="网站请求函数编写"><a href="#网站请求函数编写" class="headerlink" title="网站请求函数编写"></a>网站请求函数编写</h3><p><strong>思路</strong></p>
+<p>先编写headers（否则会被网站识别是爬虫而拒绝访问，尤其要注意添加referer，否则无法正常访问）</p>
+<p>其次调用requests库</p>
+<p>最后将数据以text格式保存在data中</p>
+<p><strong>代码</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">askurl</span>(<span class="params">url</span>):</span></span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">&quot;Referer&quot;</span>: <span class="string">&quot;http://www.sse.com.cn/&quot;</span>,</span><br><span class="line">        <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;************&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Cookie&quot;</span>: <span class="string">&quot;*********&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">    res = requests.get(url,headers=headers)</span><br><span class="line">    data = res.text</span><br><span class="line">    <span class="keyword">return</span> data</span><br></pre></td></tr></table></figure>
+
+<h3 id="数据处理函数编写"><a href="#数据处理函数编写" class="headerlink" title="数据处理函数编写"></a>数据处理函数编写</h3><p><strong>思路</strong></p>
+<p>首先我们需要将data内容转换为json格式</p>
+<p>其次将json文档转换为python字典</p>
+<p>接着将字典中需要的字段转换为中文</p>
+<p>然后挑选出我们需要的字段形成字典（创建一个需要字段的字典进行遍历）</p>
+<p>最后整合一下就好啦</p>
+<p><strong>源码</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">processdata</span>(<span class="params">url</span>):</span></span><br><span class="line">    data = askurl(url)</span><br><span class="line">    datadict = &#123;&#125;</span><br><span class="line">    data1 = data.strip(<span class="string">&quot;jsonpCallback68898()&quot;</span>)</span><br><span class="line">    stock_data = json.loads(data1, strict=<span class="literal">False</span>)</span><br><span class="line">    stock_result = stock_data[<span class="string">&#x27;result&#x27;</span>]</span><br><span class="line">    require_key = &#123;<span class="string">&#x27;挂牌数&#x27;</span>, <span class="string">&#x27;市价总值(亿元)&#x27;</span>, <span class="string">&#x27;流通市值(亿元)&#x27;</span>, <span class="string">&#x27;成交⾦额(亿元)&#x27;</span>, <span class="string">&#x27;成交量(亿股/亿份)&#x27;</span>, <span class="string">&#x27;平均市盈率(倍)&#x27;</span>, <span class="string">&#x27;成交笔数(万笔)&#x27;</span>, <span class="string">&#x27;换⼿率(%)&#x27;</span>,</span><br><span class="line">                   <span class="string">&#x27;次新股换⼿率(%)&#x27;</span>, <span class="string">&#x27;流通换⼿率(%)&#x27;</span>, &#125;</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(stock_result)):</span><br><span class="line">        stock_result[i][<span class="string">&#x27;挂牌数&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;TX_NUM&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;市价总值(亿元)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;MKT_VALUE&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;流通市值(亿元)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;NEGOTIABLE_VALUE&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;成交⾦额(亿元)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;TX_AMOUNT&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;成交量(亿股/亿份)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;TX_VOLUME&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;成交笔数(万笔)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;TRADING_TX&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;平均市盈率(倍)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;AVG_PROFIT_RATE&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;换⼿率(%)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;TOTAL_MK_CAP_RATE&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;次新股换⼿率(%)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;SUB_NEW_STOCK_RATE&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;流通换⼿率(%)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;EXCHANGE_RATE&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(stock_result)):</span><br><span class="line">        <span class="keyword">if</span> stock_result[i][<span class="string">&#x27;PRODUCT_TYPE&#x27;</span>] == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">            b1 = &#123;key: value <span class="keyword">for</span> key, value <span class="keyword">in</span> stock_result[i].items() <span class="keyword">if</span> key <span class="keyword">in</span> require_key&#125;</span><br><span class="line">            datadict[<span class="string">&#x27;主板A&#x27;</span>] = b1</span><br><span class="line">        <span class="keyword">elif</span> stock_result[i][<span class="string">&#x27;PRODUCT_TYPE&#x27;</span>] == <span class="string">&#x27;40&#x27;</span>:</span><br><span class="line">            b2 = &#123;key: value <span class="keyword">for</span> key, value <span class="keyword">in</span> stock_result[i].items() <span class="keyword">if</span> key <span class="keyword">in</span> require_key&#125;</span><br><span class="line">            datadict[<span class="string">&#x27;股票&#x27;</span>] = b2</span><br><span class="line">        <span class="keyword">elif</span> stock_result[i][<span class="string">&#x27;PRODUCT_TYPE&#x27;</span>] == <span class="string">&#x27;2&#x27;</span>:</span><br><span class="line">            b3 = &#123;key: value <span class="keyword">for</span> key, value <span class="keyword">in</span> stock_result[i].items() <span class="keyword">if</span> key <span class="keyword">in</span> require_key&#125;</span><br><span class="line">            datadict[<span class="string">&#x27;主板B&#x27;</span>] = b3</span><br><span class="line">        <span class="keyword">elif</span> stock_result[i][<span class="string">&#x27;PRODUCT_TYPE&#x27;</span>] == <span class="string">&#x27;43&#x27;</span>:</span><br><span class="line">            b4 = &#123;key: value <span class="keyword">for</span> key, value <span class="keyword">in</span> stock_result[i].items() <span class="keyword">if</span> key <span class="keyword">in</span> require_key&#125;</span><br><span class="line">            datadict[<span class="string">&#x27;科创板&#x27;</span>] = b4</span><br><span class="line">        <span class="keyword">else</span> :</span><br><span class="line">            b5 = &#123;key: value <span class="keyword">for</span> key, value <span class="keyword">in</span> stock_result[i].items() <span class="keyword">if</span> key <span class="keyword">in</span> require_key&#125;</span><br><span class="line">            datadict[<span class="string">&#x27;股票回购&#x27;</span>] = b5</span><br><span class="line">    b1 = &#123;key:value <span class="keyword">for</span> key, value <span class="keyword">in</span> stock_result[<span class="number">0</span>].items() <span class="keyword">if</span> key <span class="keyword">in</span> require_key&#125;</span><br><span class="line">    <span class="keyword">return</span> datadict</span><br></pre></td></tr></table></figure>
+
+<h2 id="最终代码展示"><a href="#最终代码展示" class="headerlink" title="最终代码展示"></a>最终代码展示</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- codeing = utf-8 -*-</span></span><br><span class="line"><span class="comment"># @Time : 2020/11/25 20:18</span></span><br><span class="line"><span class="comment"># @Author : smallwolf</span></span><br><span class="line"><span class="comment"># @File : stockcrawler.py</span></span><br><span class="line"><span class="comment"># @Software: PyCharm</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span>():</span></span><br><span class="line">    url = <span class="string">&quot;http://query.sse.com.cn/commonQuery.do?jsonCallBack=jsonpCallback68898&amp;searchDate=&amp;sqlId=COMMON_SSE_SJ_GPSJ_CJGK_DAYCJGK_C&amp;stockType=90&amp;_=1606219120118&quot;</span></span><br><span class="line">    <span class="comment">#爬取网页数据</span></span><br><span class="line">    datadict = processdata(url)</span><br><span class="line">    print(datadict)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">askurl</span>(<span class="params">url</span>):</span></span><br><span class="line">    <span class="comment"># 模拟浏览器头部信息向网站发送请求</span></span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">&quot;Referer&quot;</span>: <span class="string">&quot;http://www.sse.com.cn/&quot;</span>,</span><br><span class="line">        <span class="string">&quot;User-Agent&quot;</span>: <span class="string">&quot;Mozilla/5.0(Windows NT 10.0;Win64;x64) AppleWebKit/537.36(KHTML, likeGecko)Chrome/87.0.4280.66Safari/537.36Edg/87.0.664.41&quot;</span>,</span><br><span class="line">        <span class="string">&quot;Cookie&quot;</span>: <span class="string">&quot;yfx_c_g_u_id_10000042=_ck20112012580217653102134906192; VISITED_MENU=%5B%228312%22%2C%228451%22%2C%228453%22%2C%228466%22%5D; yfx_f_l_v_t_10000042=f_t_1605848282753__r_t_1606128624834__v_t_1606132807487__r_c_3&quot;</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">#得到目标网页信息</span></span><br><span class="line">    res = requests.get(url,headers=headers)</span><br><span class="line">    data = res.text</span><br><span class="line">    <span class="keyword">return</span> data</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">processdata</span>(<span class="params">url</span>):</span></span><br><span class="line">    data = askurl(url)</span><br><span class="line">    datadict = &#123;&#125;</span><br><span class="line">    <span class="comment">#将data内容转换为json格式</span></span><br><span class="line">    data1 = data.strip(<span class="string">&quot;jsonpCallback68898()&quot;</span>)</span><br><span class="line">    <span class="comment">#将json文档转换为python字典</span></span><br><span class="line">    stock_data = json.loads(data1, strict=<span class="literal">False</span>)</span><br><span class="line">    stock_result = stock_data[<span class="string">&#x27;result&#x27;</span>]</span><br><span class="line">    require_key = &#123;<span class="string">&#x27;挂牌数&#x27;</span>, <span class="string">&#x27;市价总值(亿元)&#x27;</span>, <span class="string">&#x27;流通市值(亿元)&#x27;</span>, <span class="string">&#x27;成交⾦额(亿元)&#x27;</span>, <span class="string">&#x27;成交量(亿股/亿份)&#x27;</span>, <span class="string">&#x27;平均市盈率(倍)&#x27;</span>, <span class="string">&#x27;成交笔数(万笔)&#x27;</span>, <span class="string">&#x27;换⼿率(%)&#x27;</span>,</span><br><span class="line">                   <span class="string">&#x27;次新股换⼿率(%)&#x27;</span>, <span class="string">&#x27;流通换⼿率(%)&#x27;</span>, &#125;</span><br><span class="line">    <span class="comment">#将字典中需要的字段转化为中文</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(stock_result)):</span><br><span class="line">        stock_result[i][<span class="string">&#x27;挂牌数&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;TX_NUM&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;市价总值(亿元)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;MKT_VALUE&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;流通市值(亿元)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;NEGOTIABLE_VALUE&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;成交⾦额(亿元)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;TX_AMOUNT&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;成交量(亿股/亿份)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;TX_VOLUME&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;成交笔数(万笔)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;TRADING_TX&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;平均市盈率(倍)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;AVG_PROFIT_RATE&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;换⼿率(%)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;TOTAL_MK_CAP_RATE&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;次新股换⼿率(%)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;SUB_NEW_STOCK_RATE&#x27;</span>)</span><br><span class="line">        stock_result[i][<span class="string">&#x27;流通换⼿率(%)&#x27;</span>] = stock_result[i].pop(<span class="string">&#x27;EXCHANGE_RATE&#x27;</span>)</span><br><span class="line">    <span class="comment">#处理原始数据成为想要的格式，方便转成DataFrame使用</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(stock_result)):</span><br><span class="line">        <span class="keyword">if</span> stock_result[i][<span class="string">&#x27;PRODUCT_TYPE&#x27;</span>] == <span class="string">&#x27;1&#x27;</span>:</span><br><span class="line">            b1 = &#123;key: value <span class="keyword">for</span> key, value <span class="keyword">in</span> stock_result[i].items() <span class="keyword">if</span> key <span class="keyword">in</span> require_key&#125;</span><br><span class="line">            datadict[<span class="string">&#x27;主板A&#x27;</span>] = b1</span><br><span class="line">        <span class="keyword">elif</span> stock_result[i][<span class="string">&#x27;PRODUCT_TYPE&#x27;</span>] == <span class="string">&#x27;40&#x27;</span>:</span><br><span class="line">            b2 = &#123;key: value <span class="keyword">for</span> key, value <span class="keyword">in</span> stock_result[i].items() <span class="keyword">if</span> key <span class="keyword">in</span> require_key&#125;</span><br><span class="line">            datadict[<span class="string">&#x27;股票&#x27;</span>] = b2</span><br><span class="line">        <span class="keyword">elif</span> stock_result[i][<span class="string">&#x27;PRODUCT_TYPE&#x27;</span>] == <span class="string">&#x27;2&#x27;</span>:</span><br><span class="line">            b3 = &#123;key: value <span class="keyword">for</span> key, value <span class="keyword">in</span> stock_result[i].items() <span class="keyword">if</span> key <span class="keyword">in</span> require_key&#125;</span><br><span class="line">            datadict[<span class="string">&#x27;主板B&#x27;</span>] = b3</span><br><span class="line">        <span class="keyword">elif</span> stock_result[i][<span class="string">&#x27;PRODUCT_TYPE&#x27;</span>] == <span class="string">&#x27;43&#x27;</span>:</span><br><span class="line">            b4 = &#123;key: value <span class="keyword">for</span> key, value <span class="keyword">in</span> stock_result[i].items() <span class="keyword">if</span> key <span class="keyword">in</span> require_key&#125;</span><br><span class="line">            datadict[<span class="string">&#x27;科创板&#x27;</span>] = b4</span><br><span class="line">        <span class="keyword">else</span> :</span><br><span class="line">            b5 = &#123;key: value <span class="keyword">for</span> key, value <span class="keyword">in</span> stock_result[i].items() <span class="keyword">if</span> key <span class="keyword">in</span> require_key&#125;</span><br><span class="line">            datadict[<span class="string">&#x27;股票回购&#x27;</span>] = b5</span><br><span class="line">    b1 = &#123;key:value <span class="keyword">for</span> key, value <span class="keyword">in</span> stock_result[<span class="number">0</span>].items() <span class="keyword">if</span> key <span class="keyword">in</span> require_key&#125;</span><br><span class="line">    <span class="keyword">return</span> datadict</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:    <span class="comment">#当函数执行时</span></span><br><span class="line"><span class="comment">#调用函数</span></span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+
+<h2 id="最终效果展示"><a href="#最终效果展示" class="headerlink" title="最终效果展示"></a>最终效果展示</h2><p><img src="https://cdn.jsdelivr.net/gh/Wolfsaml/cdn@1.1/4.jpg" alt="image-20201128224317066"></p>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>感谢请我喝奶茶<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.png">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">随笔</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">爬虫</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2020/11/28/Python%E7%88%AC%E8%99%AB%E4%B9%8B%E5%8A%A8%E6%80%81%E9%A1%B5%E9%9D%A2%E7%88%AC%E5%8F%96%E6%A1%88%E4%BE%8B/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
   
   
-    </div></section>
+    <a href="/2020/11/27/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">文件上传漏洞总结</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80%EF%BC%9A"><span class="toc-number">1.</span> <span class="toc-text">前言：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE%EF%BC%9A"><span class="toc-number">2.</span> <span class="toc-text">题目：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E7%9F%A5%E8%AF%86%E8%A1%A5%E5%85%85%EF%BC%9A"><span class="toc-number">3.</span> <span class="toc-text">背景知识补充：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%9D%E8%B7%AF%EF%BC%9A"><span class="toc-number">4.</span> <span class="toc-text">思路：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%BC%96%E5%86%99%EF%BC%9A"><span class="toc-number">5.</span> <span class="toc-text">代码编写：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A3%B0%E6%98%8E"><span class="toc-number">5.1.</span> <span class="toc-text">声明</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%BC%E5%85%A5"><span class="toc-number">5.2.</span> <span class="toc-text">导入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E5%87%BD%E6%95%B0%E7%BC%96%E5%86%99"><span class="toc-number">5.3.</span> <span class="toc-text">主函数编写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%AB%99%E8%AF%B7%E6%B1%82%E5%87%BD%E6%95%B0%E7%BC%96%E5%86%99"><span class="toc-number">5.4.</span> <span class="toc-text">网站请求函数编写</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0%E7%BC%96%E5%86%99"><span class="toc-number">5.5.</span> <span class="toc-text">数据处理函数编写</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E4%BB%A3%E7%A0%81%E5%B1%95%E7%A4%BA"><span class="toc-number">6.</span> <span class="toc-text">最终代码展示</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E6%95%88%E6%9E%9C%E5%B1%95%E7%A4%BA"><span class="toc-number">7.</span> <span class="toc-text">最终效果展示</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
+
 
 
           </div>
@@ -225,9 +430,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
